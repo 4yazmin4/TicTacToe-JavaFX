@@ -1,0 +1,14 @@
+.button {
+    -fx-font-size: 20px;
+    -fx-min-width: 100px;
+    -fx-min-height: 100px;
+    -fx-base: #f0f0f0;  /* Button base color */
+}
+
+.player1 {
+    -fx-background-color: #ff0000; /* Player 1's color */
+}
+
+.player2 {
+    -fx-background-color: #0000ff; /* Player 2's color */
+}
