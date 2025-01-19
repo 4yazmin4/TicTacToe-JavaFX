@@ -1,14 +1,33 @@
+.root {
+    -fx-background-color: #000000;
+}
+
 .button {
     -fx-font-size: 20px;
-    -fx-min-width: 100px;
-    -fx-min-height: 100px;
-    -fx-base: #f0f0f0;  /* Button base color */
+    -fx-min-width: 80px;
+    -fx-min-height: 80px;
+    -fx-base: #333333;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #444444;
+    -fx-border-color: #666666;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+}
+
+.button:hover {
+    -fx-background-color: #555555;
 }
 
 .player1 {
-    -fx-background-color: #ff0000; /* Player 1's color */
+    -fx-background-color: #888888;
 }
 
 .player2 {
-    -fx-background-color: #0000ff; /* Player 2's color */
+    -fx-background-color: #bbbbbb;
+}
+
+.turn-label {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 18px;
+    -fx-padding: 10px;
 }

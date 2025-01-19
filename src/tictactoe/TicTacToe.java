@@ -6,12 +6,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class TicTacToe extends Application {
-    private String[][] gameGrid = {{"-", "-", "-"}, {"-", "-", "-"}, {"-", "-", "-"}};
     private final String O = "O";
     private final String X = "X";
     private boolean isPlayer1Turn = true; // Track the current player
@@ -22,48 +23,65 @@ public class TicTacToe extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Tic Tac Toe ^_^!");
+        // Ask for Player Names
+        String player1Name = getPlayerName("Player 1");
+        if (player1Name == null) Platform.exit();
+
+        String player2Name = getPlayerName("Player 2");
+        if (player2Name == null) Platform.exit();
+
+        // Primary Stage Title
+        primaryStage.setTitle("Tic Tac Toe ^_^");
+
+        // Create a Label to Display the Turn
+        Label turnLabel = new Label(player1Name + "'s turn (" + O + ")");
+        turnLabel.getStyleClass().add("turn-label");
 
         // Create a GridPane
         GridPane gridPane = new GridPane();
-        gridPane.setVgap(10); // Vertical space between buttons
-        gridPane.setHgap(10); // Horizontal space between buttons
-        gridPane.setPadding(new Insets(20)); // Space around the grid
-        gridPane.setAlignment(Pos.CENTER); // Center the grid within the parent
-        gridPane.setStyle("-fx-background-color: #ADD8E6;");
+        gridPane.setVgap(5);
+        gridPane.setHgap(5);
+        gridPane.setPadding(new Insets(20));
+        gridPane.setAlignment(Pos.CENTER);
 
+        // Button array for the Tic Tac Toe grid
         Button[][] buttons = new Button[3][3];
+
+        // Initialize the buttons and add them to the grid
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 buttons[i][j] = new Button("-");
                 buttons[i][j].getStyleClass().add("button");
+                buttons[i][j].setPrefSize(80, 80); // Adjust button size for better visibility
                 gridPane.add(buttons[i][j], j, i);
 
+                // Button action
                 int row = i;
                 int col = j;
-                buttons[i][j].setOnAction(e -> {
-                    handleButtonClick(row, col, buttons);
-                    buttons[row][col].getStyleClass().add(isPlayer1Turn ? "player1" : "player2");
-                });
+                buttons[i][j].setOnAction(e -> handleButtonClick(row, col, buttons, turnLabel, player1Name, player2Name));
             }
         }
 
+        VBox layout = new VBox(10);
+        layout.getChildren().addAll(turnLabel, gridPane);
+        layout.setAlignment(Pos.CENTER);
 
-        // Use StackPane to hold the GridPane
-        StackPane layout = new StackPane();
-        layout.getChildren().add(gridPane);
-        layout.setAlignment(Pos.CENTER); // Center the grid within the scene
-        
-
-        Scene scene = new Scene(layout, 400, 450); // Adjusted scene size
+        // Create the Scene
+        Scene scene = new Scene(layout, 400, 450);
         scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
-        primaryStage.setScene(scene);
-
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private void handleButtonClick(int row, int col, Button[][] buttons) {
+    private String getPlayerName(String defaultName) {
+        TextInputDialog dialog = new TextInputDialog(defaultName);
+        dialog.setTitle("Tic Tac Toe ^_^");
+        dialog.setHeaderText("Enter " + defaultName + "'s name:");
+        dialog.setContentText("Name:");
+        return dialog.showAndWait().orElse(null);
+    }
+
+    private void handleButtonClick(int row, int col, Button[][] buttons, Label turnLabel, String player1Name, String player2Name) {
         String currentSymbol = buttons[row][col].getText();
         if (!currentSymbol.equals("-")) {
             return; // Do nothing if the button is already occupied.
@@ -71,16 +89,18 @@ public class TicTacToe extends Application {
 
         String currentPlayerSymbol = isPlayer1Turn ? O : X;
         buttons[row][col].setText(currentPlayerSymbol);
+        buttons[row][col].getStyleClass().add(isPlayer1Turn ? "player1" : "player2");
 
         if (checkWin(convertButtonGridToString(buttons), currentPlayerSymbol)) {
-            String winner = isPlayer1Turn ? "Player 1" : "Player 2";
-            System.out.println(winner + " won!");
-            Platform.exit(); // Exit the game when someone wins.
+            String winner = isPlayer1Turn ? player1Name : player2Name;
+            turnLabel.setText(winner + " won!");
+            disableButtons(buttons);
         } else if (isGridFull(convertButtonGridToString(buttons))) {
-            System.out.println("It's a draw!");
-            Platform.exit(); // Exit the game if it's a draw.
+            turnLabel.setText("It's a draw!");
+            disableButtons(buttons);
         } else {
-            isPlayer1Turn = !isPlayer1Turn; // Switch turns.
+            isPlayer1Turn = !isPlayer1Turn; // Switch turns
+            turnLabel.setText((isPlayer1Turn ? player1Name : player2Name) + "'s turn (" + (isPlayer1Turn ? O : X) + ")");
         }
     }
 
@@ -117,4 +137,13 @@ public class TicTacToe extends Application {
         }
         return true;
     }
+
+    private void disableButtons(Button[][] buttons) {
+        for (Button[] row : buttons) {
+            for (Button button : row) {
+                button.setDisable(true);
+            }
+        }
+    }
 }
+
