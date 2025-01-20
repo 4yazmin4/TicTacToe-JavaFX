@@ -31,3 +31,18 @@
     -fx-font-size: 18px;
     -fx-padding: 10px;
 }
+
+.restart-button {
+    -fx-background-color: #222222;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+    -fx-padding: 8px 16px;
+    -fx-border-color: #444444;
+    -fx-border-radius: 5px;
+}
+
+.restart-button:hover {
+    -fx-background-color: #444444;
+    
+}
+

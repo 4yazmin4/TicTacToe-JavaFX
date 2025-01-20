@@ -62,12 +62,18 @@ public class TicTacToe extends Application {
             }
         }
 
+        // Create the Restart Button
+        Button restartButton = new Button("Restart");
+        restartButton.getStyleClass().add("restart-button");
+        restartButton.setOnAction(e -> restartGame(buttons, turnLabel, player1Name));
+
+        // Arrange everything in a VBox
         VBox layout = new VBox(10);
-        layout.getChildren().addAll(turnLabel, gridPane);
+        layout.getChildren().addAll(turnLabel, gridPane, restartButton);
         layout.setAlignment(Pos.CENTER);
 
         // Create the Scene
-        Scene scene = new Scene(layout, 400, 450);
+        Scene scene = new Scene(layout, 400, 500);
         scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -145,5 +151,21 @@ public class TicTacToe extends Application {
             }
         }
     }
+
+    private void restartGame(Button[][] buttons, Label turnLabel, String player1Name) {
+        // Reset the grid
+        for (Button[] row : buttons) {
+            for (Button button : row) {
+                button.setText("-");
+                button.setDisable(false);
+                button.getStyleClass().removeAll("player1", "player2");
+            }
+        }
+
+        // Reset the turn
+        isPlayer1Turn = true;
+        turnLabel.setText(player1Name + "'s turn (" + O + ")");
+    }
 }
+
 
